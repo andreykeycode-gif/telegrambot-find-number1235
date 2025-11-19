@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой сайт в Telegram</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 30px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .nav-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .nav-card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-card:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-5px);
+        }
+        
+        .nav-card i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .content-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .content-section h2 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .product-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        
+        .btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+        }
+        
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .user-info {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .theme-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .color-box {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-right: 10px;
+            vertical-align: middle;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌐 Мой сайт в Telegram</h1>
+            <p>Добро пожаловать в наше веб-приложение!</p>
+        </div>
+        
+        <div class="user-info" id="userInfo">
+            <h3>👤 Информация о пользователе</h3>
+            <div class="info-item">
+                <span>Имя:</span>
+                <span id="userName">-</span>
+            </div>
+            <div class="info-item">
+                <span>ID:</span>
+                <span id="userId">-</span>
+            </div>
+            <div class="info-item">
+                <span>Язык:</span>
+                <span id="userLanguage">-</span>
+            </div>
+        </div>
+        
+        <div class="nav-cards">
+            <div class="nav-card" onclick="showSection('home')">
+                <i>🏠</i>
+                <h3>Главная</h3>
+                <p>Начальная страница</p>
+            </div>
+            <div class="nav-card" onclick="showSection('products')">
+                <i>🛒</i>
+                <h3>Товары</h3>
+                <p>Наш каталог</p>
+            </div>
+            <div class="nav-card" onclick="showSection('about')">
+                <i>📱</i>
+                <h3>О нас</h3>
+                <p>Информация о компании</p>
+            </div>
+            <div class="nav-card" onclick="showSection('contacts')">
+                <i>📞</i>
+                <h3>Контакты</h3>
+                <p>Свяжитесь с нами</p>
+            </div>
+        </div>
+        
+        <!-- Главная страница -->
+        <div class="content-section" id="homeSection">
+            <h2>🏠 Добро пожаловать!</h2>
+            <p>Это демонстрация веб-сайта внутри Telegram. Вы можете:</p>
+            <ul style="margin: 15px 0; padding-left: 20px;">
+                <li>Просматривать товары</li>
+                <li>Ознакомиться с информацией о нас</li>
+                <li>Связаться с поддержкой</li>
+                <li>Использовать все функции сайта</li>
+            </ul>
+            <button class="btn btn-primary" onclick="tg.showAlert('Привет от Telegram Web App!')">
+                📢 Показать alert
+            </button>
+            <button class="btn" onclick="tg.HapticFeedback.impactOccurred('medium')">
+                📳 Вибрация
+            </button>
+        </div>
+        
+        <!-- Товары -->
+        <div class="content-section" id="productsSection" style="display: none;">
+            <h2>🛒 Наши товары</h2>
+            <div class="products">
+                <div class="product-card">
+                    <div class="product-image">💻</div>
+                    <h4>Ноутбук</h4>
+                    <p>15 000 ₽</p>
+                    <button class="btn" onclick="addToCart('Ноутбук')">В корзину</button>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">📱</div>
+                    <h4>Смартфон</h4>
+                    <p>25 000 ₽</p>
+                    <button class="btn" onclick="addToCart('Смартфон')">В корзину</button>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">🎧</div>
+                    <h4>Наушники</h4>
+                    <p>5 000 ₽</p>
+                    <button class="btn" onclick="addToCart('Наушники')">В корзину</button>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">⌚</div>
+                    <h4>Часы</h4>
+                    <p>8 000 ₽</p>
+                    <button class="btn" onclick="addToCart('Часы')">В корзину</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- О нас -->
+        <div class="content-section" id="aboutSection" style="display: none;">
+            <h2>📱 О нашем приложении</h2>
+            <p>Это демонстрационное веб-приложение, созданное для Telegram Mini Apps.</p>
+            
+            <h3 style="margin: 20px 0 10px 0;">🚀 Технологии:</h3>
+            <ul style="margin-bottom: 20px; padding-left: 20px;">
+                <li>HTML5, CSS3, JavaScript</li>
+                <li>Telegram Web App API</li>
+                <li>Python для бэкенда</li>
+            </ul>
+            
+            <h3 style="margin: 20px 0 10px 0;">💡 Преимущества:</h3>
+            <ul style="padding-left: 20px;">
+                <li>Мгновенный запуск</li>
+                <li>Не требует установки</li>
+                <li>Кроссплатформенность</li>
+                <li>Высокая безопасность</li>
+            </ul>
+        </div>
+        
+        <!-- Контакты -->
+        <div class="content-section" id="contactsSection" style="display: none;">
+            <h2>📞 Контакты</h2>
+            <p>Свяжитесь с нами удобным способом:</p>
+            
+            <div style="margin: 20px 0;">
+                <button class="btn" onclick="tg.openTelegramLink('https://t.me/your_channel')">
+                    💬 Наш Telegram
+                </button>
+                <button class="btn" onclick="tg.openLink('https://wa.me/79991234567')">
+                    📱 WhatsApp
+                </button>
+                <button class="btn" onclick="tg.openLink('mailto:info@company.com')">
+                    📧 Email
+                </button>
+            </div>
+            
+            <div class="theme-section">
+                <h3>🎨 Тема приложения</h3>
+                <div id="themeParams">
+                    <!-- Параметры темы будут здесь -->
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px; opacity: 0.7;">
+            <p>© 2024 Мой сайт в Telegram. Все права защищены.</p>
+        </div>
+    </div>
+
+    <script>
+        // Инициализация Telegram Web App
+        const tg = window.Telegram.WebApp;
+        
+        // Расширяем на весь экран
+        tg.expand();
+        
+        // Показываем основную кнопку
+        tg.MainButton.setText("Отправить данные")
+            .show()
+            .onClick(() => {
+                const data = {
+                    user: tg.initDataUnsafe.user,
+                    action: "main_button_click",
+                    timestamp: Date.now()
+                };
+                tg.sendData(JSON.stringify(data));
+                tg.showAlert("Данные отправлены!");
+            });
+        
+        // Заполняем информацию о пользователе
+        if (tg.initDataUnsafe.user) {
+            document.getElementById('userName').textContent = 
+                tg.initDataUnsafe.user.first_name || 'Не указано';
+            document.getElementById('userId').textContent = 
+                tg.initDataUnsafe.user.id || 'Не доступен';
+            document.getElementById('userLanguage').textContent = 
+                tg.initDataUnsafe.user.language_code || 'Не указан';
+        }
+        
+        // Функции для навигации
+        function showSection(sectionName) {
+            // Скрываем все секции
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Показываем выбранную секцию
+            document.getElementById(sectionName + 'Section').style.display = 'block';
+        }
+        
+        // Функция добавления в корзину
+        function addToCart(productName) {
+            tg.HapticFeedback.impactOccurred('light');
+            tg.showAlert(`Товар "${productName}" добавлен в корзину!`);
+            
+            // Отправляем данные в бот
+            const data = {
+                action: "add_to_cart",
+                product: productName,
+                user: tg.initDataUnsafe.user?.id
+            };
+            tg.sendData(JSON.stringify(data));
+        }
+        
+        // Отображение параметров темы
+        function displayThemeParams() {
+            const themeParams = tg.themeParams;
+            const container = document.getElementById('themeParams');
+            container.innerHTML = '';
+            
+            for (const [key, value] of Object.entries(themeParams)) {
+                const div = document.createElement('div');
+                div.style.cssText = 'display: flex; align-items: center; padding: 5px 0;';
+                
+                if (key.includes('color')) {
+                    div.innerHTML = `
+                        <span class="color-box" style="background-color: ${value};"></span>
+                        <span>${key}: ${value}</span>
+                    `;
+                } else {
+                    div.textContent = `${key}: ${value}`;
+                }
+                
+                container.appendChild(div);
+            }
+        }
+        
+        // Обработчик изменения темы
+        tg.onEvent('themeChanged', displayThemeParams);
+        
+        // Инициализация при загрузке
+        displayThemeParams();
+        showSection('home');
+        
+        console.log('Telegram Web App инициализирован');
+    </script>
+</body>
+</html>
+import logging
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import Application, CommandHandler, CallbackQueryHandler, MessageHandler, filters, ContextTypes
+
+# Настройка логирования
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+
+
+BOT_TOKEN = "8534864098:AAGmZ2Kzun7d4DRPxHrNEvI7yh6t9cA_c1Q"
+
+# Главное меню
+def main_menu():
+    keyboard = [
+        [InlineKeyboardButton("🌐 Открыть веб-сайт", web_app={"url": "https://your-webapp-url.com"})],
+        [InlineKeyboardButton("📱 О приложении", callback_data="about")],
+        [InlineKeyboardButton("🛠️ Поддержка", callback_data="support")],
+        [InlineKeyboardButton("📞 Контакты", callback_data="contacts")]
+    ]
+    return InlineKeyboardMarkup(keyboard)
+
+# Команда /start
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user = update.effective_user
+    
+    welcome_text = f"""🌐 *Добро пожаловать в наш веб-сайт в Telegram!*
+
+Привет, {user.first_name}! 
+
+🚀 *Наш сайт теперь доступен прямо в Telegram!*
+
+📱 *Что ты можешь сделать:*
+• 🌐 Открыть полноценный веб-сайт
+• 🛒 Просматривать товары
+• 💬 Общаться с поддержкой
+• 📞 Связаться с нами
+
+Нажми кнопку ниже, чтобы открыть сайт:"""
+    
+    await update.message.reply_text(
+        welcome_text,
+        reply_markup=main_menu(),
+        parse_mode='Markdown'
+    )
+
+# Обработка нажатий кнопок
+async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    await query.answer()
+    
+    data = query.data
+    
+    if data == "about":
+        await show_about(query)
+    elif data == "support":
+        await show_support(query)
+    elif data == "contacts":
+        await show_contacts(query)
+    elif data == "main_menu":
+        await show_main_menu(query)
+         keyboard = [
+        [InlineKeyboardButton("🌐 Открыть сайт", web_app={"url": "https://your-webapp-url.com"})],
+        [InlineKeyboardButton("🏠 Главное меню", callback_data="main_menu")]
+    ]
+    
+    await query.edit_message_text(
+        text=text,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
+
+# Поддержка
+async def show_support(query):
+    text = """🛠️ *Техническая поддержка*
+
+📞 *Способы связи:*
+• 💬 Чат с поддержкой в боте
+• 📧 Email: support@company.com
+• 🌐 Форма на сайте
+
+🕒 *Время работы поддержки:*
+Пн-Пт: 9:00 - 18:00
+Сб-Вс: 10:00 - 16:00
+
+⚡ *Частые вопросы:*
+• Как открыть сайт? - Нажми кнопку "Открыть веб-сайт"
+• Не грузится сайт? - Проверьте интернет-соединение
+• Есть ошибки? - Напишите нам"""
+    
+    keyboard = [
+        [InlineKeyboardButton("💬 Написать в поддержку", url="https://t.me/your_support_bot")],
+        [InlineKeyboardButton("🌐 Открыть сайт", web_app={"url": "https://your-webapp-url.com"})],
+        [InlineKeyboardButton("🏠 Главное меню", callback_data="main_menu")]
+    ]
+    
+    await query.edit_message_text(
+        text=text,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
+
+# Контакты
+async def show_contacts(query):
+    text = """📞 *Наши контакты*
+
+📍 *Адрес:*
+г. Москва, ул. Примерная, д. 123
+
+📱 *Телефоны:*
++7 (999) 123-45-67 - Менеджер
++7 (999) 765-43-21 - Техподдержка
+
+📧 *Email:*
+info@company.com - Общие вопросы
+support@company.com - Техподдержка
+
+🌐 *Соцсети:*
+• Telegram: @company
+• VK: vk.com/company
+• Instagram: @company
+
+🕒 *Режим работы:*
+Пн-Пт: 9:00 - 18:00
+Сб-Вс: выходной"""
+    
+    keyboard = [
+        [
+            InlineKeyboardButton("📞 Позвонить", url="tel:+79991234567"),
+            InlineKeyboardButton("📧 Написать", url="mailto:info@company.com")
+        ],
+        [
+            InlineKeyboardButton("🌐 Наш сайт", web_app={"url": "https://your-webapp-url.com"}),
+            InlineKeyboardButton("🗺️ Яндекс.Карты", url="https://yandex.ru/maps/")
+        ],
+        [InlineKeyboardButton("🏠 Главное меню", callback_data="main_menu")]
+    ]
+    
+    await query.edit_message_text(
+        text=text,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
+    )
+
+# Главное меню
+async def show_main_menu(query):
+    text = "🏠 *Главное меню*\n\nВыберите действие:"
+    await query.edit_message_text(
+        text=text,
+        reply_markup=main_menu(),
+        parse_mode='Markdown'
+    )
+
+# Обработка текстовых сообщений
+async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_message = update.message.text
+    
+    if any(word in user_message.lower() for word in ['сайт', 'website', 'web']):
+        await update.message.reply_text(
+            "🌐 *Чтобы открыть наш сайт, нажмите кнопку ниже:*",
+            reply_markup=main_menu(),
+            parse_mode='Markdown'
+        )
+    else:
+        await update.message.reply_text(
+            "🤔 Не понял ваш запрос. Используйте кнопки меню для навигации:",
+            reply_markup=main_menu()
+        )
+
+# Команда /website
+async def website_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "🌐 *Откройте наш веб-сайт прямо в Telegram:*",
+        reply_markup=main_menu(),
+        parse_mode='Markdown'
+    )
+
+# Основная функция
+def main():
+    # Создаем приложение
+    application = Application.builder().token(BOT_TOKEN).build()
+    
+    # Добавляем обработчики
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("website", website_command))
+    application.add_handler(CallbackQueryHandler(button_handler))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+    
+    # Запускаем бота
+    print("🌐 Бот-вебсайт запущен!")
+    print("📍 Найдите бота в Telegram и нажмите /start")
+    print("🚀 Готов к работе!")
+    
+    application.run_polling()
+
+if __name__ == "__main__":
+    main()
+    /setinline
+    /setmenubutton
